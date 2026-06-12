@@ -16,45 +16,339 @@ from pypdf import PdfWriter
 # PAGE CONFIG
 # ─────────────────────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="Website Audit",
+    page_title="WebAudit Pro",
     page_icon="🔎",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
-# MINIMAL CSS POLISH
+# PROFESSIONAL LIGHT THEME CSS
 # ─────────────────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-.tech-badge {
-    display:inline-block; padding:2px 9px; border-radius:20px;
-    font-size:11px; font-weight:600; margin:2px 2px;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ── Global reset & base ── */
+html, body, [class*="css"] {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
-.badge-wordpress  { background:#21759B22; color:#21759B; }
-.badge-shopify    { background:#96BF4822; color:#5E8E3E; }
-.badge-wix        { background:#FAAD1422; color:#B07D00; }
-.badge-squarespace{ background:#00000022; color:#333; }
-.badge-joomla     { background:#F44E2722; color:#C03D1E; }
-.badge-drupal     { background:#0678BE22; color:#0678BE; }
-.badge-webflow    { background:#4353FF22; color:#2D3AC0; }
-.badge-magento    { background:#EE672222; color:#C24E12; }
-.badge-unknown    { background:#88888822; color:#555; }
-.badge-plugin     { background:#6C63FF22; color:#4B44CC; }
-.score-chip {
-    display:inline-block; padding:4px 12px; border-radius:20px;
-    font-size:13px; font-weight:700; margin:0 4px;
+
+/* ── App background — clean off-white ── */
+.stApp {
+    background: #F7F8FA !important;
 }
-/* Download button — matches the primary blue #1F62FF */
-[data-testid="stDownloadButton"] > button {
-    background-color: #1F62FF !important;
+
+/* ── Remove Streamlit's default top toolbar gap ── */
+#root > div:first-child {
+    margin-top: 0 !important;
+}
+header[data-testid="stHeader"] {
+    display: none !important;
+}
+
+/* ── Main content wrapper ── */
+.block-container {
+    padding: 2rem 3rem 3rem 3rem !important;
+    padding-top: 2rem !important;
+    margin-top: 0 !important;
+    max-width: 1200px !important;
+}
+
+/* ── App header / title ── */
+h1 {
+    font-size: 1.9rem !important;
+    font-weight: 700 !important;
+    color: #0F1623 !important;
+    letter-spacing: -0.5px !important;
+    margin-bottom: 0.25rem !important;
+}
+
+/* ── Section subheaders ── */
+h2, h3 {
+    font-weight: 600 !important;
+    color: #1A2233 !important;
+    letter-spacing: -0.3px !important;
+}
+
+/* ── Body text ── */
+p, li, label, .stMarkdown {
+    color: #2D3748 !important;
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+}
+
+/* ── Caption / small text ── */
+small, .stCaption, [data-testid="stCaptionContainer"] {
+    color: #6B7A99 !important;
+    font-size: 0.82rem !important;
+}
+
+/* ── Input fields ── */
+.stTextInput > div > div > input,
+.stNumberInput > div > div > input {
+    background: #FFFFFF !important;
+    border: 1.5px solid #D8DEE9 !important;
+    border-radius: 8px !important;
+    color: #1A2233 !important;
+    font-size: 0.94rem !important;
+    padding: 0.55rem 0.85rem !important;
+    transition: border-color 0.2s ease !important;
+}
+.stTextInput > div > div > input:focus,
+.stNumberInput > div > div > input:focus {
+    border-color: #2563EB !important;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important;
+}
+
+/* ── Labels ── */
+.stTextInput label, .stNumberInput label, .stRadio label {
+    font-weight: 500 !important;
+    font-size: 0.87rem !important;
+    color: #374151 !important;
+    margin-bottom: 4px !important;
+}
+
+/* ── Primary button ── */
+.stButton > button[kind="primary"],
+button[data-testid="baseButton-primary"] {
+    background: #2563EB !important;
     color: #FFFFFF !important;
     border: none !important;
+    border-radius: 8px !important;
     font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    padding: 0.55rem 1.2rem !important;
+    letter-spacing: 0.01em !important;
+    transition: background 0.18s ease, box-shadow 0.18s ease !important;
+    box-shadow: 0 1px 4px rgba(37,99,235,0.18) !important;
+}
+.stButton > button[kind="primary"]:hover,
+button[data-testid="baseButton-primary"]:hover {
+    background: #1D4ED8 !important;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.28) !important;
+}
+
+/* ── Secondary / default button ── */
+.stButton > button:not([kind="primary"]) {
+    background: #FFFFFF !important;
+    color: #374151 !important;
+    border: 1.5px solid #D1D9E8 !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    transition: border-color 0.18s ease, background 0.18s ease !important;
+}
+.stButton > button:not([kind="primary"]):hover {
+    border-color: #2563EB !important;
+    color: #2563EB !important;
+    background: #EFF6FF !important;
+}
+
+/* ── Download button ── */
+[data-testid="stDownloadButton"] > button {
+    background: #2563EB !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    box-shadow: 0 1px 4px rgba(37,99,235,0.18) !important;
 }
 [data-testid="stDownloadButton"] > button:hover {
-    background-color: #1750D6 !important;
-    color: #FFFFFF !important;
+    background: #1D4ED8 !important;
+}
+
+/* ── Radio buttons ── */
+.stRadio > div {
+    gap: 1rem !important;
+    flex-direction: row !important;
+}
+.stRadio > div > label {
+    background: #FFFFFF !important;
+    border: 1.5px solid #D8DEE9 !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 1rem !important;
+    cursor: pointer !important;
+    transition: border-color 0.18s, background 0.18s !important;
+    font-weight: 500 !important;
+    color: #374151 !important;
+}
+.stRadio > div > label:has(input:checked) {
+    border-color: #2563EB !important;
+    background: #EFF6FF !important;
+    color: #1D4ED8 !important;
+}
+
+/* ── Info / warning / success boxes ── */
+[data-testid="stAlert"] {
+    border-radius: 8px !important;
+    border-left-width: 4px !important;
+    font-size: 0.91rem !important;
+}
+
+/* ── Metric cards ── */
+[data-testid="stMetric"] {
+    background: #FFFFFF !important;
+    border: 1px solid #E5EAF3 !important;
+    border-radius: 10px !important;
+    padding: 1rem 1.25rem !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+}
+[data-testid="stMetricLabel"] {
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    color: #6B7A99 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+}
+[data-testid="stMetricValue"] {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #0F1623 !important;
+}
+
+/* ── Expander ── */
+[data-testid="stExpander"] {
+    background: #FFFFFF !important;
+    border: 1px solid #E5EAF3 !important;
+    border-radius: 10px !important;
+    margin-bottom: 0.75rem !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+    overflow: hidden !important;
+}
+[data-testid="stExpander"] summary {
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    color: #1A2233 !important;
+    padding: 0.85rem 1.1rem !important;
+}
+[data-testid="stExpander"] summary:hover {
+    background: #F7F8FA !important;
+}
+
+/* ── Containers / cards ── */
+[data-testid="stVerticalBlock"] > [data-testid="stVerticalBlock"] {
+    background: transparent;
+}
+
+/* ── Divider ── */
+hr {
+    border: none !important;
+    border-top: 1px solid #E5EAF3 !important;
+    margin: 1rem 0 !important;
+}
+
+/* ── Checkbox ── */
+.stCheckbox label {
+    color: #374151 !important;
+    font-weight: 400 !important;
+}
+
+/* ── Progress bar ── */
+.stProgress > div > div {
+    background: #2563EB !important;
+    border-radius: 99px !important;
+}
+.stProgress > div {
+    border-radius: 99px !important;
+    background: #E5EAF3 !important;
+}
+
+/* ── Spinner ── */
+[data-testid="stSpinner"] p {
+    color: #6B7A99 !important;
+    font-size: 0.9rem !important;
+}
+
+/* ── Tech badges ── */
+.tech-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 2px 2px;
+    letter-spacing: 0.02em;
+}
+
+/* ── Score chip ── */
+.score-chip {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 4px;
+}
+
+/* ── App header banner ── */
+.app-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #E5EAF3;
+}
+.app-header-icon {
+    width: 44px; height: 44px;
+    background: #2563EB;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+}
+.app-header-title {
+    font-size: 1.45rem !important;
+    font-weight: 700 !important;
+    color: #0F1623 !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+}
+.app-header-sub {
+    font-size: 0.85rem;
+    color: #6B7A99;
+    margin: 0;
+}
+
+/* ── Step label pill ── */
+.step-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #EFF6FF;
+    color: #2563EB;
+    border-radius: 99px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+/* ── Result row card ── */
+.result-card {
+    background: #FFFFFF;
+    border: 1px solid #E5EAF3;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.6rem;
+    transition: box-shadow 0.18s;
+}
+.result-card:hover {
+    box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+    border-color: #CBD5E8;
+}
+
+/* ── Footer ── */
+.app-footer {
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #E5EAF3;
+    font-size: 0.8rem;
+    color: #9AA5BC;
+    text-align: center;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -804,10 +1098,19 @@ def _render_tech_badges(t: dict) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 # MAIN APP
 # ─────────────────────────────────────────────────────────────────────────────
-st.title("Website Audit")
+st.markdown("""
+<div class="app-header">
+  <div class="app-header-icon">🔎</div>
+  <div>
+    <div class="app-header-title">WebAudit Pro</div>
+    <div class="app-header-sub">Multi-engine business finder · Tech detection · Website scoring · PDF reports</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
 
 # ── STEP 1: Mode Selection ───────────────────────────────────────────────────
-st.subheader("Step 1 — Choose Your Audit Mode")
+st.markdown('<div class="step-pill">Step 1 &nbsp;·&nbsp; Choose Mode</div>', unsafe_allow_html=True)
+st.markdown("#### What would you like to audit?")
 
 mode = st.radio(
     "What would you like to do?",
@@ -859,7 +1162,8 @@ if is_direct_mode:
     ready_url = st.session_state.get("direct_url_ready", "")
     if ready_url:
         st.markdown("")
-        st.subheader("Step 2 — Detect Tech Stack")
+        st.markdown('<div class="step-pill">Step 2 &nbsp;·&nbsp; Tech Detection</div>', unsafe_allow_html=True)
+        st.markdown("#### Detect Tech Stack")
         st.caption(f"URL: [{ready_url}]({ready_url})")
 
         direct_tech = st.session_state.get("direct_tech", {})
@@ -895,7 +1199,8 @@ if is_direct_mode:
         # ── STEP 3 (Direct mode): Run Audit ──────────────────────────────────
         if already_detected or skip_btn:
             st.markdown("")
-            st.subheader("Step 3 — Run Audit")
+            st.markdown('<div class="step-pill">Step 3 &nbsp;·&nbsp; Audit</div>', unsafe_allow_html=True)
+            st.markdown("#### Run Audit")
             already_has_audit = ready_url in st.session_state.get("audits", {})
             audit_btn_label = "🔄 Re-audit Site" if already_has_audit else "🚀 Audit Site"
             audit_btn = st.button(audit_btn_label, type="primary", use_container_width=True)
@@ -940,7 +1245,8 @@ if "results" in st.session_state and st.session_state["results"]:
     results = st.session_state["results"]
     engines = st.session_state["engines"]
 
-    st.subheader("Step 2 — Search Results")
+    st.markdown('<div class="step-pill">Step 2 &nbsp;·&nbsp; Results</div>', unsafe_allow_html=True)
+    st.markdown("#### Search Results")
     st.caption(f"Engines used: {' · '.join(engines)}")
     st.info(f"Found **{len(results)}** unique business websites after filtering directories & aggregators.")
 
@@ -1037,7 +1343,8 @@ if "results" in st.session_state and st.session_state["results"]:
         st.divider()
 
     # ── Bulk Audit ────────────────────────────────────────────────────────────
-    st.subheader("Audit Selected Sites")
+    st.markdown('<div class="step-pill">Step 3 &nbsp;·&nbsp; Bulk Audit</div>', unsafe_allow_html=True)
+    st.markdown("#### Audit Selected Sites")
     n_selected = len(selected)
 
     if n_selected == 0:
@@ -1073,9 +1380,8 @@ _direct_mode_results = audits and "results" not in st.session_state
 
 if audits:
     step_label = "Step 4" if "results" in st.session_state else "Step 3"
-    # In direct mode, tech + audit steps are already shown inline above,
-    # so we only render the results card here.
-    st.subheader(f"{step_label} — Audit Results")
+    st.markdown(f'<div class="step-pill">{step_label} &nbsp;·&nbsp; Audit Results</div>', unsafe_allow_html=True)
+    st.markdown("#### Audit Results")
     audit_list = list(audits.values())
 
     if not _direct_mode_results:
@@ -1100,8 +1406,8 @@ if audits:
             expanded=_direct_mode_results,
         ):
             st.markdown(
-                f'<div style="height:8px;background:#eee;border-radius:4px;margin-bottom:12px;">'
-                f'<div style="height:8px;width:{score}%;background:{_score_color(score)};border-radius:4px;"></div>'
+                f'<div style="height:10px;background:#E5EAF3;border-radius:99px;margin-bottom:16px;overflow:hidden;">'
+                f'<div style="height:10px;width:{score}%;background:{_score_color(score)};border-radius:99px;transition:width 0.6s ease;"></div>'
                 f'</div>', unsafe_allow_html=True
             )
 
@@ -1110,13 +1416,15 @@ if audits:
                 for col, (cat, data) in zip(cols, bd.items()):
                     s = data.get("score", 0)
                     col.markdown(
-                        f'<div style="text-align:center;">'
-                        f'<div style="font-size:22px;font-weight:700;color:{_score_color(s)};">{s}</div>'
-                        f'<div style="font-size:10px;color:#888;">{cat.upper()}</div>'
+                        f'<div style="text-align:center;background:#F7F8FA;border:1px solid #E5EAF3;'
+                        f'border-radius:10px;padding:0.85rem 0.5rem;">'
+                        f'<div style="font-size:1.6rem;font-weight:700;color:{_score_color(s)};line-height:1;">{s}</div>'
+                        f'<div style="font-size:10px;color:#6B7A99;font-weight:600;letter-spacing:0.07em;'
+                        f'text-transform:uppercase;margin-top:4px;">{cat}</div>'
                         f'</div>',
                         unsafe_allow_html=True,
                     )
-                st.divider()
+                st.markdown("")
 
             st.markdown("---")
             try:
@@ -1134,7 +1442,7 @@ if audits:
                 st.warning(f"PDF generation failed: {e}")
 
     if not _direct_mode_results and len(filtered) > 1:
-        st.subheader("Export All Results")
+        st.markdown("#### Export All Reports")
         writer = PdfWriter()
         for a in filtered:
             try:
@@ -1159,5 +1467,8 @@ if audits:
 # ─────────────────────────────────────────────────────────────────────────────
 # FOOTER
 # ─────────────────────────────────────────────────────────────────────────────
-st.divider()
-st.caption("Business Finder Pro · Multi-engine Search · Tech Detection · Audit · PDF Reports")
+st.markdown("""
+<div class="app-footer">
+  WebAudit Pro &nbsp;·&nbsp; Multi-engine Search &nbsp;·&nbsp; Tech Detection &nbsp;·&nbsp; Website Scoring &nbsp;·&nbsp; PDF Reports
+</div>
+""", unsafe_allow_html=True)
